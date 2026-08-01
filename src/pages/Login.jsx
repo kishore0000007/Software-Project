@@ -1,15 +1,28 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+ import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Backend integration later
-    console.log("Login Submitted");
+    // Temporary Authentication
+    localStorage.setItem("isAuthenticated", "true");
+
+    // Temporary User Data
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        company: "ABC Company",
+        role: "Manager",
+      })
+    );
+
+    navigate("/dashboard");
   };
 
   return (
@@ -18,11 +31,11 @@ const Login = () => {
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-blue-600 mx-auto flex items-center justify-center text-white text-2xl font-bold">
+          <div className="w-16 h-16 mx-auto rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
             P
           </div>
 
-          <h1 className="text-3xl font-bold mt-4 text-slate-800">
+          <h1 className="text-3xl font-bold text-slate-800 mt-4">
             PowerPredict
           </h1>
 
@@ -31,50 +44,41 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Form */}
-
+        {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
           {/* Email */}
-
           <div>
             <label className="block text-sm font-medium mb-2">
               Company Email
             </label>
 
             <div className="relative">
-
-              <FiMail
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+              <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
 
               <input
                 type="email"
+                required
                 placeholder="company@email.com"
-                className="w-full border rounded-lg py-3 pl-10 pr-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-
             </div>
           </div>
 
           {/* Password */}
-
           <div>
-
             <label className="block text-sm font-medium mb-2">
               Password
             </label>
 
             <div className="relative">
-
-              <FiLock
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+              <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
 
               <input
                 type={showPassword ? "text" : "password"}
+                required
                 placeholder="Enter Password"
-                className="w-full border rounded-lg py-3 pl-10 pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
 
               <button
@@ -82,38 +86,32 @@ const Login = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
               >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
+                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
               </button>
-
             </div>
-
           </div>
 
-          {/* Remember */}
-
-          <div className="flex justify-between items-center text-sm">
+          {/* Remember Me */}
+          <div className="flex items-center justify-between text-sm">
 
             <label className="flex items-center gap-2">
-
               <input type="checkbox" />
-
               Remember Me
-
             </label>
 
-            <Link
-              to="/forgot-password"
+            <button
+              type="button"
               className="text-blue-600 hover:underline"
             >
               Forgot Password?
-            </Link>
+            </button>
 
           </div>
 
           {/* Login Button */}
-
           <button
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition duration-300"
           >
             Login
           </button>
@@ -121,18 +119,15 @@ const Login = () => {
         </form>
 
         {/* Register */}
-
-        <p className="text-center mt-6 text-sm">
-
+        <p className="text-center mt-6 text-sm text-gray-600">
           Don't have an account?
 
           <Link
             to="/register"
-            className="text-blue-600 font-semibold ml-1 hover:underline"
+            className="ml-1 font-semibold text-blue-600 hover:underline"
           >
             Register
           </Link>
-
         </p>
 
       </div>

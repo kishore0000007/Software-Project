@@ -1,40 +1,49 @@
-import { FaBell, FaUserCircle } from "react-icons/fa";
+ import { FaBars, FaBell, FaUserCircle } from "react-icons/fa";
 
-const Navbar = () => {
+const Navbar = ({ setIsOpen }) => {
   return (
-    <header className="bg-white shadow px-8 py-4 flex justify-between items-center">
+    <header className="bg-white h-16 shadow flex justify-between items-center px-6">
 
-      <div>
+      <div className="flex items-center gap-4">
 
-        <h2 className="text-2xl font-bold text-slate-800">
-          Dashboard
-        </h2>
+        <button
+          className="lg:hidden text-xl"
+          onClick={() => setIsOpen(true)}
+        >
+          <FaBars />
+        </button>
 
-        <p className="text-gray-500">
-          AI Load Shedding Prediction System
-        </p>
+        <div>
+          <h2 className="font-bold text-2xl">
+            Dashboard
+          </h2>
+
+          <p className="text-gray-500 text-sm">
+            Welcome Back
+          </p>
+        </div>
 
       </div>
 
       <div className="flex items-center gap-6">
 
-        <button className="relative text-2xl">
+        <button className="relative">
 
-          <FaBell />
+          <FaBell className="text-xl"/>
 
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"/>
 
         </button>
 
         <div className="flex items-center gap-3">
 
-          <FaUserCircle className="text-4xl text-slate-700" />
+          <FaUserCircle className="text-4xl text-slate-700"/>
 
           <div>
 
-            <h4 className="font-semibold">
+            <p className="font-semibold">
               ABC Company
-            </h4>
+            </p>
 
             <p className="text-sm text-gray-500">
               Manager

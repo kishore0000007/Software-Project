@@ -1,4 +1,4 @@
-import {
+ import {
   LineChart,
   Line,
   CartesianGrid,
@@ -7,12 +7,15 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+
 import {
   FaBolt,
   FaBell,
   FaChartLine,
   FaBatteryHalf,
 } from "react-icons/fa";
+
+import StatsCard from "../components/StatsCard";
 
 const chartData = [
   { day: "Mon", outage: 2 },
@@ -45,98 +48,71 @@ const history = [
   },
 ];
 
-const cards = [
-  {
-    title: "Today's Prediction",
-    value: "Likely",
-    color: "bg-blue-600",
-    icon: <FaChartLine />,
-  },
-  {
-    title: "Area Status",
-    value: "Power Available",
-    color: "bg-green-600",
-    icon: <FaBolt />,
-  },
-  {
-    title: "Backup Power",
-    value: "4.5 Hours",
-    color: "bg-yellow-500",
-    icon: <FaBatteryHalf />,
-  },
-  {
-    title: "Alerts",
-    value: "2 Active",
-    color: "bg-red-500",
-    icon: <FaBell />,
-  },
-];
-
 const Dashboard = () => {
   return (
-    <div className="space-y-8">
+    <div className="w-full space-y-6">
 
-      {/* Header */}
-
+      {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-800">
           Dashboard
         </h1>
 
-        <p className="text-gray-500">
+        <p className="mt-1 text-gray-500">
           Monitor your business electricity status and AI predictions.
         </p>
       </div>
 
-      {/* Cards */}
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <StatsCard
+          title="Today's Prediction"
+          value="Likely"
+          color="bg-blue-600"
+          icon={<FaChartLine />}
+        />
 
-        {cards.map((card) => (
-          <div
-            key={card.title}
-            className={`${card.color} text-white rounded-xl p-6 shadow-lg`}
-          >
-            <div className="flex justify-between items-center">
+        <StatsCard
+          title="Area Status"
+          value="Power Available"
+          color="bg-green-600"
+          icon={<FaBolt />}
+        />
 
-              <div>
+        <StatsCard
+          title="Backup Power"
+          value="4.5 Hours"
+          color="bg-yellow-500"
+          icon={<FaBatteryHalf />}
+        />
 
-                <p className="text-sm opacity-80">
-                  {card.title}
-                </p>
-
-                <h2 className="text-2xl font-bold mt-2">
-                  {card.value}
-                </h2>
-
-              </div>
-
-              <div className="text-4xl opacity-80">
-                {card.icon}
-              </div>
-
-            </div>
-          </div>
-        ))}
+        <StatsCard
+          title="Alerts"
+          value="2 Active"
+          color="bg-red-500"
+          icon={<FaBell />}
+        />
 
       </div>
 
-      {/* Chart + Alerts */}
+      {/* Chart & Alerts */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
-      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Chart */}
+        <div className="xl:col-span-2 rounded-2xl bg-white p-6 shadow">
 
-        <div className="lg:col-span-2 bg-white rounded-xl shadow p-6">
-
-          <h2 className="text-xl font-semibold mb-5">
+          <h2 className="mb-6 text-xl font-semibold text-slate-800">
             Weekly Prediction Trend
           </h2>
 
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={320}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="day" />
               <YAxis />
               <Tooltip />
+
               <Line
                 type="monotone"
                 dataKey="outage"
@@ -148,37 +124,32 @@ const Dashboard = () => {
 
         </div>
 
-        <div className="bg-white rounded-xl shadow p-6">
+        {/* Alerts */}
+        <div className="rounded-2xl bg-white p-6 shadow">
 
-          <h2 className="text-xl font-semibold mb-5">
+          <h2 className="mb-6 text-xl font-semibold text-slate-800">
             Recent Alerts
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
 
             <div className="border-l-4 border-red-500 pl-4">
-              <p className="font-semibold">
-                Mirpur
-              </p>
-              <p className="text-gray-500 text-sm">
+              <h3 className="font-semibold">Mirpur</h3>
+              <p className="text-sm text-gray-500">
                 Outage expected at 5:00 PM
               </p>
             </div>
 
             <div className="border-l-4 border-yellow-500 pl-4">
-              <p className="font-semibold">
-                Uttara
-              </p>
-              <p className="text-gray-500 text-sm">
+              <h3 className="font-semibold">Uttara</h3>
+              <p className="text-sm text-gray-500">
                 High Grid Load
               </p>
             </div>
 
             <div className="border-l-4 border-blue-500 pl-4">
-              <p className="font-semibold">
-                Dhanmondi
-              </p>
-              <p className="text-gray-500 text-sm">
+              <h3 className="font-semibold">Dhanmondi</h3>
+              <p className="text-sm text-gray-500">
                 Prediction Updated
               </p>
             </div>
@@ -189,26 +160,25 @@ const Dashboard = () => {
 
       </div>
 
-      {/* Table */}
+      {/* Prediction History */}
+      <div className="rounded-2xl bg-white p-6 shadow">
 
-      <div className="bg-white rounded-xl shadow p-6">
-
-        <h2 className="text-xl font-semibold mb-5">
+        <h2 className="mb-6 text-xl font-semibold text-slate-800">
           Recent Prediction History
         </h2>
 
         <div className="overflow-x-auto">
 
-          <table className="w-full">
+          <table className="min-w-full">
 
-            <thead>
+            <thead className="bg-slate-100">
 
-              <tr className="border-b">
+              <tr>
 
-                <th className="text-left py-3">Date</th>
-                <th className="text-left py-3">Area</th>
-                <th className="text-left py-3">Prediction</th>
-                <th className="text-left py-3">Duration</th>
+                <th className="px-4 py-3 text-left">Date</th>
+                <th className="px-4 py-3 text-left">Area</th>
+                <th className="px-4 py-3 text-left">Prediction</th>
+                <th className="px-4 py-3 text-left">Duration</th>
 
               </tr>
 
@@ -221,10 +191,10 @@ const Dashboard = () => {
                   key={index}
                   className="border-b hover:bg-slate-50"
                 >
-                  <td className="py-4">{item.date}</td>
-                  <td>{item.area}</td>
-                  <td>{item.prediction}</td>
-                  <td>{item.duration}</td>
+                  <td className="px-4 py-4">{item.date}</td>
+                  <td className="px-4">{item.area}</td>
+                  <td className="px-4">{item.prediction}</td>
+                  <td className="px-4">{item.duration}</td>
                 </tr>
               ))}
 
