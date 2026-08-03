@@ -37,6 +37,38 @@ const Settings = () => {
     alert("Settings saved successfully!");
   };
 
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [passwords, setPasswords] = useState({ current: "", next: "", confirm: "" });
+  const [passwordMessage, setPasswordMessage] = useState("");
+
+  const handlePasswordChange = (e) => {
+    setPasswords({ ...passwords, [e.target.name]: e.target.value });
+    setPasswordMessage("");
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+
+    if (!passwords.current || !passwords.next || !passwords.confirm) {
+      setPasswordMessage("Please fill in all fields.");
+      return;
+    }
+
+    if (passwords.next !== passwords.confirm) {
+      setPasswordMessage("New passwords do not match.");
+      return;
+    }
+
+    // TODO: replace with a real API call once backend auth is wired up.
+    setPasswordMessage("Password updated successfully.");
+    setPasswords({ current: "", next: "", confirm: "" });
+
+    setTimeout(() => {
+      setShowPasswordForm(false);
+      setPasswordMessage("");
+    }, 2000);
+  };
+
   return (
     <div className="space-y-8">
 
@@ -223,10 +255,54 @@ const Settings = () => {
 
           <button
             type="button"
+            onClick={() => setShowPasswordForm((v) => !v)}
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
           >
-            Change Admin Password
+            {showPasswordForm ? "Cancel" : "Change Admin Password"}
           </button>
+
+          {showPasswordForm && (
+            <div className="mt-5 max-w-md space-y-4">
+              <input
+                type="password"
+                name="current"
+                placeholder="Current password"
+                value={passwords.current}
+                onChange={handlePasswordChange}
+                className="w-full border rounded-lg p-3"
+              />
+
+              <input
+                type="password"
+                name="next"
+                placeholder="New password"
+                value={passwords.next}
+                onChange={handlePasswordChange}
+                className="w-full border rounded-lg p-3"
+              />
+
+              <input
+                type="password"
+                name="confirm"
+                placeholder="Confirm new password"
+                value={passwords.confirm}
+                onChange={handlePasswordChange}
+                className="w-full border rounded-lg p-3"
+              />
+
+              <button
+                type="button"
+                onClick={handlePasswordSubmit}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg"
+              >
+                Update Password
+              </button>
+
+              {passwordMessage && (
+                <p className="text-sm text-slate-600">{passwordMessage}</p>
+              )}
+            </div>
+          )}
 
         </div>
 

@@ -4,6 +4,7 @@ import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
 
@@ -11,6 +12,11 @@ const Login = () => {
     e.preventDefault();
 
     // Temporary Authentication
+    // TODO: replace with a real API call that returns the user + role
+    // from the backend once auth is wired up.
+    const isAdmin = email.trim().toLowerCase().endsWith("@admin.com");
+    const role = isAdmin ? "admin" : "user";
+
     localStorage.setItem("isAuthenticated", "true");
 
     // Temporary User Data
@@ -18,11 +24,11 @@ const Login = () => {
       "user",
       JSON.stringify({
         company: "ABC Company",
-        role: "Manager",
+        role,
       })
     );
 
-    navigate("/dashboard");
+    navigate(isAdmin ? "/admin" : "/dashboard");
   };
 
   return (
@@ -42,6 +48,10 @@ const Login = () => {
           <p className="text-slate-500 mt-2">
             Business Login
           </p>
+
+          <p className="text-xs text-slate-400 mt-1">
+            Demo: emails ending in <span className="font-mono">@admin.com</span> log in as admin, others as a regular user.
+          </p>
         </div>
 
         {/* Login Form */}
@@ -59,6 +69,8 @@ const Login = () => {
               <input
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="company@email.com"
                 className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

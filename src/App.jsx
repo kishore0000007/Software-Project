@@ -27,8 +27,8 @@ function App() {
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
+      {/* Protected Routes - regular users */}
+      <Route element={<ProtectedRoute allowedRoles={["user"]} />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/prediction" element={<Prediction />} />
@@ -36,20 +36,20 @@ function App() {
           <Route path="/backup" element={<BackupPower />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<AdminDashboard />} />
         </Route>
       </Route>
-      <Route path="/admin" element={<AdminLayout />}>
 
-  <Route index element={<AdminDashboard />} />
-   <Route path="companies" element={<Companies />} />
-   <Route path="users" element={<User />} />
-   <Route path="subscriptions" element={<Subscription />} />
-   <Route path="revenue" element={<Revenue />} />
-   <Route path="settings" element={<Settings />} />
-
-
-</Route>
+      {/* Protected Routes - admin only */}
+      <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="companies" element={<Companies />} />
+          <Route path="users" element={<User />} />
+          <Route path="subscriptions" element={<Subscription />} />
+          <Route path="revenue" element={<Revenue />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Route>
     </Routes>
 
   );
