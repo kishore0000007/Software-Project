@@ -2,8 +2,8 @@ export const stats = {
   totalCompanies: 215,
   totalUsers: 1248,
   activeSubscriptions: 184,
-  monthlyRevenue: 8950,
-  yearlyRevenue: 107400,
+  monthlyRevenue: 895000,
+  yearlyRevenue: 10740000,
   predictionsToday: 1532,
   notificationsSent: 487,
   activeGenerators: 89,
@@ -15,7 +15,7 @@ export const companies = [
     email: "abc@company.com",
     plan: "Business",
     status: "Active",
-    revenue: "$29.99",
+    revenue: "৳2,500",
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ export const companies = [
     email: "xyz@gmail.com",
     plan: "Enterprise",
     status: "Active",
-    revenue: "$99.99",
+    revenue: "৳9,999",
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ export const companies = [
     email: "power@tech.com",
     plan: "Basic",
     status: "Pending",
-    revenue: "$9.99",
+    revenue: "৳999",
   },
   {
     id: 4,
@@ -39,7 +39,7 @@ export const companies = [
     email: "green@gmail.com",
     plan: "Business",
     status: "Active",
-    revenue: "$29.99",
+    revenue: "৳2,500",
   },
   {
     id: 5,
@@ -47,19 +47,19 @@ export const companies = [
     email: "future@gmail.com",
     plan: "Free",
     status: "Inactive",
-    revenue: "$0",
+    revenue: "৳0",
   },
 ];
 
  
 export const revenueData = [
-  { month: "Jan", revenue: 5000 },
-  { month: "Feb", revenue: 6200 },
-  { month: "Mar", revenue: 7000 },
-  { month: "Apr", revenue: 8100 },
-  { month: "May", revenue: 9000 },
-  { month: "Jun", revenue: 9500 },
-  { month: "Jul", revenue: 10200 },
+  { month: "Jan", revenue: 500000 },
+  { month: "Feb", revenue: 620000 },
+  { month: "Mar", revenue: 700000 },
+  { month: "Apr", revenue: 810000 },
+  { month: "May", revenue: 900000 },
+  { month: "Jun", revenue: 950000 },
+  { month: "Jul", revenue: 1020000 },
 ];
 
 export const subscriptionData = [
@@ -114,7 +114,7 @@ export const users = [
   {
     id: 1,
     plan: "Free",
-    price: "$0",
+    price: "৳0",
     billing: "-",
     subscribers: 80,
     status: "Active",
@@ -122,7 +122,7 @@ export const users = [
   {
     id: 2,
     plan: "Basic",
-    price: "$9.99",
+    price: "৳999",
     billing: "Monthly",
     subscribers: 60,
     status: "Active",
@@ -130,7 +130,7 @@ export const users = [
   {
     id: 3,
     plan: "Business",
-    price: "$29.99",
+    price: "৳2,500",
     billing: "Monthly",
     subscribers: 45,
     status: "Active",
@@ -138,27 +138,51 @@ export const users = [
   {
     id: 4,
     plan: "Enterprise",
-    price: "$99.99",
+    price: "৳9,999",
     billing: "Monthly",
     subscribers: 30,
     status: "Active",
   },
 ];
+
+// Shared "recent alerts" feed used by both the AdminNavbar notification
+// bell and the full Alert Channels page, so the unread badge count and
+// the list the admin sees always match.
+export const adminAlerts = [
+  {
+    id: 1,
+    message: "Mirpur outage expected at 5 PM.",
+    time: "5 min ago",
+    level: "high",
+  },
+  {
+    id: 2,
+    message: "High grid load detected.",
+    time: "22 min ago",
+    level: "medium",
+  },
+  {
+    id: 3,
+    message: "Dhanmondi prediction updated.",
+    time: "1 hr ago",
+    level: "low",
+  },
+];
 export const monthlyRevenue = [
-  { month: "Jan", revenue: 5000 },
-  { month: "Feb", revenue: 6200 },
-  { month: "Mar", revenue: 7000 },
-  { month: "Apr", revenue: 8100 },
-  { month: "May", revenue: 9200 },
-  { month: "Jun", revenue: 9800 },
-  { month: "Jul", revenue: 10400 },
+  { month: "Jan", revenue: 500000 },
+  { month: "Feb", revenue: 620000 },
+  { month: "Mar", revenue: 700000 },
+  { month: "Apr", revenue: 810000 },
+  { month: "May", revenue: 920000 },
+  { month: "Jun", revenue: 980000 },
+  { month: "Jul", revenue: 1040000 },
 ];
 
 export const yearlyRevenue = [
-  { year: "2022", revenue: 42000 },
-  { year: "2023", revenue: 68000 },
-  { year: "2024", revenue: 92000 },
-  { year: "2025", revenue: 107400 },
+  { year: "2022", revenue: 4200000 },
+  { year: "2023", revenue: 6800000 },
+  { year: "2024", revenue: 9200000 },
+  { year: "2025", revenue: 10740000 },
 ];
 
 export const payments = [
@@ -166,7 +190,7 @@ export const payments = [
     id: 1,
     company: "ABC Company",
     plan: "Business",
-    amount: "$29.99",
+    amount: "৳2,500",
     date: "01 Aug 2026",
     status: "Paid",
   },
@@ -174,7 +198,7 @@ export const payments = [
     id: 2,
     company: "XYZ Ltd",
     plan: "Enterprise",
-    amount: "$99.99",
+    amount: "৳9,999",
     date: "31 Jul 2026",
     status: "Paid",
   },
@@ -182,7 +206,7 @@ export const payments = [
     id: 3,
     company: "PowerTech",
     plan: "Basic",
-    amount: "$9.99",
+    amount: "৳999",
     date: "30 Jul 2026",
     status: "Pending",
   },

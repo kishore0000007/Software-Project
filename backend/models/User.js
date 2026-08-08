@@ -24,6 +24,21 @@ const userSchema = new mongoose.Schema(
       default: "business",
     },
 
+    phone: {
+      type: String,
+      default: "",
+    },
+
+    address: {
+      type: String,
+      default: "",
+    },
+
+    avatar: {
+      type: String,
+      default: "",
+    },
+
     subscription: {
       type: String,
       default: "Free",

@@ -8,10 +8,10 @@ import { Navigate, Outlet } from "react-router-dom";
  *   <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>  // admin only
  */
 const ProtectedRoute = ({ allowedRoles }) => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  const isAuthenticated = localStorage.getItem("token") && localStorage.getItem("isAuthenticated");
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && allowedRoles.length > 0) {

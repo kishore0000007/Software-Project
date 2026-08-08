@@ -1,10 +1,13 @@
- import express from "express";
+import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 import {
   register,
   login,
   getProfile,
+  updateProfile,
+  updateSubscription,
+  changePassword,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -12,7 +15,10 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 
-// Protected Route
+// Protected Routes
 router.get("/profile", authMiddleware, getProfile);
+router.put("/profile", authMiddleware, updateProfile);
+router.put("/subscription", authMiddleware, updateSubscription);
+router.put("/change-password", authMiddleware, changePassword);
 
 export default router;

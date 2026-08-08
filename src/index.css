@@ -1,5 +1,9 @@
  @import "tailwindcss";
 
+/* Switch Tailwind's `dark:` variant from OS-preference based to a manual
+   toggle driven by a `.dark` class on <html> (see ThemeContext). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Subtle grid backdrop used behind dashboard/admin content areas */
 .bg-grid-pattern {
   background-image: radial-gradient(circle, #dbe3ee 1px, transparent 1px);

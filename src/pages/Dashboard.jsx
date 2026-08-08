@@ -1,4 +1,5 @@
- import {
+ import { useEffect, useState } from "react";
+import {
   LineChart,
   Line,
   CartesianGrid,
@@ -8,14 +9,12 @@
   ResponsiveContainer,
 } from "recharts";
 
-import {
-  FaBolt,
-  FaBell,
-  FaChartLine,
-  FaBatteryHalf,
-} from "react-icons/fa";
+import { FaBolt, FaBell, FaChartLine, FaBatteryHalf, FaCrown } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import StatsCard from "../components/StatsCard";
+import { predictionsApi } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
 
 const chartData = [
   { day: "Mon", outage: 2 },
@@ -27,68 +26,95 @@ const chartData = [
   { day: "Sun", outage: 1 },
 ];
 
-const history = [
-  {
-    date: "01 Aug",
-    area: "Mirpur",
-    prediction: "Likely",
-    duration: "2 Hours",
-  },
-  {
-    date: "31 Jul",
-    area: "Dhanmondi",
-    prediction: "Low",
-    duration: "30 Min",
-  },
-  {
-    date: "30 Jul",
-    area: "Uttara",
-    prediction: "High",
-    duration: "3 Hours",
-  },
-];
+const borderByStatus = {
+  High: "border-red-500",
+  Medium: "border-yellow-500",
+  Low: "border-blue-500",
+};
 
 const Dashboard = () => {
+  const { t } = useLanguage();
+  const [topAreas, setTopAreas] = useState([]);
+  const [plan, setPlan] = useState(null);
+  const [limit, setLimit] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    predictionsApi
+      .getAll()
+      .then((data) => {
+        setTopAreas(data.predictions.slice(0, 5));
+        setPlan(data.plan);
+        setLimit(data.limit);
+      })
+      .catch(() => setTopAreas([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const highestRisk = topAreas.find((a) => !a.locked);
+  const todaysPrediction = highestRisk ? highestRisk.status : "—";
+  const areaStatus =
+    highestRisk?.status === "High" ? "Outage Likely" : "Power Available";
+  const isLimited = limit !== null;
   return (
     <div className="w-full space-y-6">
 
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">
-          Dashboard
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+          {t("dashboard")}
         </h1>
 
-        <p className="mt-1 text-gray-500">
-          Monitor your business electricity status and AI predictions.
+        <p className="mt-1 text-gray-500 dark:text-slate-400">
+          {t("customerDashboardDesc")}
         </p>
       </div>
+
+      {/* Plan usage banner */}
+      {isLimited && (
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-blue-200 bg-blue-50 px-5 py-4 dark:border-blue-900/50 dark:bg-blue-500/10">
+          <div className="flex items-center gap-3">
+            <FaCrown className="text-lg text-blue-600 dark:text-blue-400" />
+            <p className="text-sm text-blue-800 dark:text-blue-300">
+              You're on the <span className="font-semibold">{plan}</span> plan —{" "}
+              {topAreas.filter((a) => !a.locked).length} area(s) unlocked.
+            </p>
+          </div>
+          <Link
+            to="/subscription"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            {t("upgradePlan")}
+          </Link>
+        </div>
+      )}
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
         <StatsCard
-          title="Today's Prediction"
-          value="Likely"
+          title={t("todaysPrediction")}
+          value={todaysPrediction}
           color="bg-blue-600"
           icon={<FaChartLine />}
         />
 
         <StatsCard
-          title="Area Status"
-          value="Power Available"
+          title={t("highestRiskArea")}
+          value={areaStatus}
           color="bg-green-600"
           icon={<FaBolt />}
         />
 
         <StatsCard
-          title="Backup Power"
+          title={t("backupPowerStat")}
           value="4.5 Hours"
           color="bg-yellow-500"
           icon={<FaBatteryHalf />}
         />
 
         <StatsCard
-          title="Alerts"
+          title={t("alertsStat")}
           value="2 Active"
           color="bg-red-500"
           icon={<FaBell />}
@@ -100,10 +126,10 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
         {/* Chart */}
-        <div className="xl:col-span-2 rounded-2xl bg-white p-6 shadow">
+        <div className="xl:col-span-2 rounded-2xl bg-white p-6 shadow dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
-          <h2 className="mb-6 text-xl font-semibold text-slate-800">
-            Weekly Prediction Trend
+          <h2 className="mb-6 text-xl font-semibold text-slate-800 dark:text-slate-100">
+            {t("weeklyPredictionTrend")}
           </h2>
 
           <ResponsiveContainer width="100%" height={320}>
@@ -125,34 +151,42 @@ const Dashboard = () => {
         </div>
 
         {/* Alerts */}
-        <div className="rounded-2xl bg-white p-6 shadow">
+        <div className="rounded-2xl bg-white p-6 shadow dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
-          <h2 className="mb-6 text-xl font-semibold text-slate-800">
-            Recent Alerts
+          <h2 className="mb-6 text-xl font-semibold text-slate-800 dark:text-slate-100">
+            {t("topAtRiskAreas")}
           </h2>
 
           <div className="space-y-5">
 
-            <div className="border-l-4 border-red-500 pl-4">
-              <h3 className="font-semibold">Mirpur</h3>
-              <p className="text-sm text-gray-500">
-                Outage expected at 5:00 PM
-              </p>
-            </div>
+            {loading && (
+              <p className="text-sm text-slate-400 dark:text-slate-500">Loading live areas…</p>
+            )}
 
-            <div className="border-l-4 border-yellow-500 pl-4">
-              <h3 className="font-semibold">Uttara</h3>
-              <p className="text-sm text-gray-500">
-                High Grid Load
-              </p>
-            </div>
+            {!loading && topAreas.length === 0 && (
+              <p className="text-sm text-slate-400 dark:text-slate-500">No live data available.</p>
+            )}
 
-            <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="font-semibold">Dhanmondi</h3>
-              <p className="text-sm text-gray-500">
-                Prediction Updated
-              </p>
-            </div>
+            {topAreas.slice(0, 3).map((area) =>
+              area.locked ? (
+                <div key={area.areaId} className="border-l-4 border-slate-200 pl-4 dark:border-slate-700">
+                  <h3 className="font-semibold text-slate-400">{area.name}</h3>
+                  <Link to="/subscription" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
+                    Upgrade to view
+                  </Link>
+                </div>
+              ) : (
+                <div
+                  key={area.areaId}
+                  className={`border-l-4 pl-4 ${borderByStatus[area.status]}`}
+                >
+                  <h3 className="font-semibold dark:text-slate-100">{area.name}</h3>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">
+                    {area.status} risk · {area.riskScore}/100
+                  </p>
+                </div>
+              )
+            )}
 
           </div>
 
@@ -160,25 +194,25 @@ const Dashboard = () => {
 
       </div>
 
-      {/* Prediction History */}
-      <div className="rounded-2xl bg-white p-6 shadow">
+      {/* Live Area Overview */}
+      <div className="rounded-2xl bg-white p-6 shadow dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
-        <h2 className="mb-6 text-xl font-semibold text-slate-800">
-          Recent Prediction History
+        <h2 className="mb-6 text-xl font-semibold text-slate-800 dark:text-slate-100">
+          {t("liveAreaRiskOverview")}
         </h2>
 
         <div className="overflow-x-auto">
 
           <table className="min-w-full">
 
-            <thead className="bg-slate-100">
+            <thead className="bg-slate-100 dark:bg-slate-800">
 
               <tr>
 
-                <th className="px-4 py-3 text-left">Date</th>
-                <th className="px-4 py-3 text-left">Area</th>
-                <th className="px-4 py-3 text-left">Prediction</th>
-                <th className="px-4 py-3 text-left">Duration</th>
+                <th className="px-4 py-3 text-left dark:text-slate-200">Area</th>
+                <th className="px-4 py-3 text-left dark:text-slate-200">Zone</th>
+                <th className="px-4 py-3 text-left dark:text-slate-200">Risk</th>
+                <th className="px-4 py-3 text-left dark:text-slate-200">Confidence</th>
 
               </tr>
 
@@ -186,17 +220,29 @@ const Dashboard = () => {
 
             <tbody>
 
-              {history.map((item, index) => (
-                <tr
-                  key={index}
-                  className="border-b hover:bg-slate-50"
-                >
-                  <td className="px-4 py-4">{item.date}</td>
-                  <td className="px-4">{item.area}</td>
-                  <td className="px-4">{item.prediction}</td>
-                  <td className="px-4">{item.duration}</td>
-                </tr>
-              ))}
+              {topAreas.map((area) =>
+                area.locked ? (
+                  <tr key={area.areaId} className="border-b bg-slate-50/60 dark:border-slate-800 dark:bg-slate-800/30">
+                    <td className="px-4 py-4 font-medium text-slate-400">{area.name}</td>
+                    <td className="px-4 text-slate-400">{area.zone}</td>
+                    <td className="px-4" colSpan={2}>
+                      <Link to="/subscription" className="text-xs font-semibold text-blue-600 hover:underline dark:text-blue-400">
+                        Upgrade to unlock
+                      </Link>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr
+                    key={area.areaId}
+                    className="border-b hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50"
+                  >
+                    <td className="px-4 py-4 font-medium dark:text-slate-100">{area.name}</td>
+                    <td className="px-4 text-slate-500 dark:text-slate-400">{area.zone}</td>
+                    <td className="px-4 dark:text-slate-300">{area.status} · {area.riskScore}</td>
+                    <td className="px-4 text-slate-500 dark:text-slate-400">{area.confidence}%</td>
+                  </tr>
+                )
+              )}
 
             </tbody>
 

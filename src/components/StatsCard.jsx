@@ -5,17 +5,17 @@ const StatsCard = ({
   color = "bg-blue-600",
 }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
 
       <div className="flex justify-between items-center">
 
         <div>
 
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 text-sm dark:text-slate-400">
             {title}
           </p>
 
-          <h2 className="text-3xl font-bold text-slate-800 mt-2">
+          <h2 className="text-3xl font-bold text-slate-800 mt-2 dark:text-slate-100">
             {value}
           </h2>
 

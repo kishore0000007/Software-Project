@@ -19,11 +19,11 @@ const Reports = () => {
   return (
     <div className="space-y-8">
 
-      <h1 className="text-3xl font-bold">
+      <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
         Reports & Analytics
       </h1>
 
-      <div className="bg-white rounded-xl shadow p-6">
+      <div className="bg-white rounded-xl shadow p-6 dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
         <ResponsiveContainer width="100%" height={350}>
 

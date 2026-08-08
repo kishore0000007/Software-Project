@@ -8,7 +8,7 @@ const DashboardLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-grid-pattern min-h-screen bg-slate-50">
+    <div className="bg-grid-pattern min-h-screen bg-slate-50 dark:bg-slate-950">
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="flex min-h-screen flex-col lg:ml-64">

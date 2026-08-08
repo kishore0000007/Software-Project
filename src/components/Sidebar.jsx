@@ -2,28 +2,31 @@
 import {
   FaChartPie,
   FaRobot,
-  FaBell,
+  FaCreditCard,
   FaBatteryHalf,
   FaChartBar,
   FaUser,
   FaSignOutAlt,
   FaTimes,
 } from "react-icons/fa";
-
-const menu = [
-  { name: "Dashboard", path: "/dashboard", icon: <FaChartPie /> },
-  { name: "Prediction", path: "/prediction", icon: <FaRobot /> },
-  { name: "Notifications", path: "/notifications", icon: <FaBell /> },
-  { name: "Backup Power", path: "/backup", icon: <FaBatteryHalf /> },
-  { name: "Reports", path: "/reports", icon: <FaChartBar /> },
-  { name: "Profile", path: "/profile", icon: <FaUser /> },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const menu = [
+    { name: t("dashboard"), path: "/dashboard", icon: <FaChartPie /> },
+    { name: t("predictionNav"), path: "/prediction", icon: <FaRobot /> },
+    { name: t("subscriptionNav"), path: "/subscription", icon: <FaCreditCard /> },
+    { name: t("backupPowerNav"), path: "/backup", icon: <FaBatteryHalf /> },
+    { name: t("reportsNav"), path: "/reports", icon: <FaChartBar /> },
+    { name: t("profileNav"), path: "/profile", icon: <FaUser /> },
+  ];
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
 
     navigate("/");
@@ -41,14 +44,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
       {/* Sidebar */}
       <aside
-  className={`fixed top-0 left-0 z-40 h-screen w-64 bg-slate-900 text-white flex flex-col transition-transform duration-300
+  className={`fixed top-0 left-0 z-40 h-screen w-64 bg-slate-900 text-white flex flex-col transition-transform duration-300 dark:bg-slate-950 dark:border-r dark:border-slate-800
   ${isOpen ? "translate-x-0" : "-translate-x-full"}
   lg:translate-x-0`}
 >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <h1 className="text-2xl font-bold text-blue-400">
-            ⚡ PowerPredict
+            ⚡ {t("appName")}
           </h1>
 
           <button
@@ -63,7 +66,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         <nav className="flex-1 p-4 overflow-y-auto">
           {menu.map((item) => (
             <NavLink
-              key={item.name}
+              key={item.path}
               to={item.path}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
@@ -87,7 +90,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             className="w-full flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 py-3 rounded-xl transition"
           >
             <FaSignOutAlt />
-            Logout
+            {t("logout")}
           </button>
         </div>
       </aside>

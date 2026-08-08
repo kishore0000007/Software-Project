@@ -1,39 +1,45 @@
- import { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
+import authApi from "../services/api";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    // Temporary Authentication
-    // TODO: replace with a real API call that returns the user + role
-    // from the backend once auth is wired up.
-    const isAdmin = email.trim().toLowerCase().endsWith("@admin.com");
-    const role = isAdmin ? "admin" : "user";
+    try {
+      const data = await authApi.login({ email, password });
 
-    localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("token", data.token);
+      // Normalize companyName -> company so the rest of the UI (Navbar,
+      // Profile, Sidebar) doesn't need to change field names.
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...data.user, company: data.user.companyName })
+      );
 
-    // Temporary User Data
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        company: "ABC Company",
-        role,
-      })
-    );
-
-    navigate(isAdmin ? "/admin" : "/dashboard");
+      navigate(data.user.role === "admin" ? "/admin" : "/dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4 dark:bg-slate-950">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
         {/* Logo */}
         <div className="text-center mb-8">
@@ -41,25 +47,27 @@ const Login = () => {
             P
           </div>
 
-          <h1 className="text-3xl font-bold text-slate-800 mt-4">
+          <h1 className="text-3xl font-bold text-slate-800 mt-4 dark:text-slate-100">
             PowerPredict
           </h1>
 
-          <p className="text-slate-500 mt-2">
+          <p className="text-slate-500 mt-2 dark:text-slate-400">
             Business Login
-          </p>
-
-          <p className="text-xs text-slate-400 mt-1">
-            Demo: emails ending in <span className="font-mono">@admin.com</span> log in as admin, others as a regular user.
           </p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 dark:bg-red-500/10 dark:border-red-900/50 dark:text-red-400">
+              {error}
+            </div>
+          )}
+
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium mb-2 dark:text-slate-300">
               Company Email
             </label>
 
@@ -72,14 +80,14 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="company@email.com"
-                className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium mb-2 dark:text-slate-300">
               Password
             </label>
 
@@ -89,8 +97,10 @@ const Login = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
-                className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg py-3 pl-10 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
 
               <button
@@ -106,7 +116,7 @@ const Login = () => {
           {/* Remember Me */}
           <div className="flex items-center justify-between text-sm">
 
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 dark:text-slate-300">
               <input type="checkbox" />
               Remember Me
             </label>
@@ -123,15 +133,16 @@ const Login = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition duration-300"
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-lg font-semibold transition duration-300"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
 
         {/* Register */}
-        <p className="text-center mt-6 text-sm text-gray-600">
+        <p className="text-center mt-6 text-sm text-gray-600 dark:text-slate-400">
           Don't have an account?
 
           <Link

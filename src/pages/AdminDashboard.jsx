@@ -23,6 +23,7 @@ import {
 } from "recharts";
 
 import AdminStatsCard from "../components/AdminStatsCard";
+import { useLanguage } from "../context/LanguageContext";
 
 import {
   stats,
@@ -37,17 +38,21 @@ const COLORS = [
   "#dc2626",
 ];
 
+const formatTaka = (value) => `৳${Number(value).toLocaleString("en-IN")}`;
+
 const AdminDashboard = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="space-y-8">
 
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">
-          Admin Dashboard
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
+          {t("adminDashboard")}
         </h1>
 
-        <p className="text-gray-500 mt-2">
+        <p className="text-gray-500 mt-2 dark:text-slate-400">
           Monitor platform usage, subscriptions and revenue.
         </p>
       </div>
@@ -78,14 +83,14 @@ const AdminDashboard = () => {
 
         <AdminStatsCard
           title="Monthly Revenue"
-          value={`$${stats.monthlyRevenue}`}
+          value={`৳${stats.monthlyRevenue.toLocaleString("en-BD")}`}
           color="bg-orange-500"
           icon={<FaMoneyBillWave />}
         />
 
         <AdminStatsCard
           title="Yearly Revenue"
-          value={`$${stats.yearlyRevenue}`}
+          value={`৳${stats.yearlyRevenue.toLocaleString("en-BD")}`}
           color="bg-indigo-600"
           icon={<FaChartLine />}
         />
@@ -117,9 +122,9 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         {/* Revenue Chart */}
-        <div className="xl:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+        <div className="xl:col-span-2 bg-white rounded-2xl shadow-lg p-6 dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
-          <h2 className="text-xl font-semibold mb-6">
+          <h2 className="text-xl font-semibold mb-6 dark:text-slate-100">
             Monthly Revenue
           </h2>
 
@@ -133,7 +138,7 @@ const AdminDashboard = () => {
 
               <YAxis />
 
-              <Tooltip />
+              <Tooltip formatter={(value) => formatTaka(value)} />
 
               <Bar
                 dataKey="revenue"
@@ -148,9 +153,9 @@ const AdminDashboard = () => {
         </div>
 
         {/* Subscription Pie Chart */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-6 dark:bg-slate-900 dark:shadow-none dark:ring-1 dark:ring-slate-800">
 
-          <h2 className="text-xl font-semibold mb-6">
+          <h2 className="text-xl font-semibold mb-6 dark:text-slate-100">
             Subscription Distribution
           </h2>
 

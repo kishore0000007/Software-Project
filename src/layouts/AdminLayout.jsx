@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 const AdminLayout = () => {
   return (
-    <div className="bg-grid-pattern min-h-screen bg-slate-50">
+    <div className="bg-grid-pattern min-h-screen bg-slate-50 dark:bg-slate-950">
       <AdminSidebar />
 
       <div className="ml-64 flex min-h-screen flex-col">
