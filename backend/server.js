@@ -7,7 +7,6 @@ import authRoutes from "./routes/authRoutes.js";
 import protectedRoutes from "./routes/protectedRoutes.js";
 import alertRoutes from "./routes/alertRoutes.js";
 import predictionRoutes from "./routes/predictionRoutes.js";
-import { initDiscordBot } from "./services/discordService.js";
 
 dotenv.config();
 
@@ -54,10 +53,6 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     await connectDB();
-
-    // Doesn't block server startup — the bot connects in the background,
-    // and sendDiscordAlert waits for it if a request comes in before it's ready.
-    initDiscordBot();
 
     app.listen(PORT, () => {
       console.log(`🚀 Server Running on http://localhost:${PORT}`);
